@@ -22,6 +22,7 @@ public class MeleeWeapon : MonoBehaviour
     
     private bool canDamage = true;
     private Renderer weaponRenderer;
+    private Material weaponMaterial;
     private Color originalColor;
     
     void Start()
@@ -30,7 +31,9 @@ public class MeleeWeapon : MonoBehaviour
         weaponRenderer = GetComponentInChildren<Renderer>();
         if (weaponRenderer != null)
         {
-            originalColor = weaponRenderer.material.color;
+            // Store material reference to avoid creating new instances
+            weaponMaterial = weaponRenderer.material;
+            originalColor = weaponMaterial.color;
         }
         
         // Verificar que tenga collider trigger
@@ -109,9 +112,9 @@ public class MeleeWeapon : MonoBehaviour
         canDamage = false;
         
         // Cambiar color visual
-        if (weaponRenderer != null)
+        if (weaponMaterial != null)
         {
-            weaponRenderer.material.color = cooldownColor;
+            weaponMaterial.color = cooldownColor;
         }
         
         StartCoroutine(CooldownCoroutine());
@@ -124,9 +127,9 @@ public class MeleeWeapon : MonoBehaviour
         canDamage = true;
         
         // Restaurar color
-        if (weaponRenderer != null)
+        if (weaponMaterial != null)
         {
-            weaponRenderer.material.color = readyColor;
+            weaponMaterial.color = readyColor;
         }
         
         Debug.Log("Lanza lista para atacar de nuevo!");
