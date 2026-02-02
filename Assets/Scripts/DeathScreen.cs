@@ -111,17 +111,19 @@ public class DeathScreen : MonoBehaviour
     }
     
     public void QuitGame()
-    {
-        Debug.Log("Saliendo del juego...");
-        
-        // En el editor de Unity
-        #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-        #else
-        // En build
-        Application.Quit();
-        #endif
-    }
+{
+    Debug.Log("Volviendo al menú principal...");
+    
+    // Reanudar el tiempo antes de cambiar de escena
+    Time.timeScale = 1f;
+    
+    // Desbloquear el cursor para el menú
+    Cursor.lockState = CursorLockMode.None;
+    Cursor.visible = true;
+    
+    // Cargar la escena del menú principal
+    SceneManager.LoadScene("Demo1");
+}
     
     void OnDestroy()
     {
