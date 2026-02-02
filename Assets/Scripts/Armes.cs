@@ -26,37 +26,43 @@ public class Weapons : MonoBehaviour
     {
         if (ammo > 0)
         {
-            //Sfx
             ammo--;
             Debug.Log("Ammo remaining: " + ammo);
             
-            //Raycast logic to detect hit
-            if (Physics.Raycast(transform.position, transform.forward, out hit, range))
+            // Raycast from camera (screen center)
+            Camera cam = Camera.main;
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            
+            if (Physics.Raycast(ray, out hit, range))
             {
                 Debug.Log("Hit: " + hit.transform.name);
                 
-                // Try to damage EnemyA (Turret)
-                EnemyA enemyA = hit.transform.GetComponent<EnemyA>();
+                // Try to find enemy script on hit object or parents
+                EnemyA enemyA = hit.transform.GetComponentInParent<EnemyA>();
                 if (enemyA != null)
                 {
+                    Debug.Log("✓ Damaging EnemyA with " + damage + " damage");
                     enemyA.TakeDamage(damage);
                     return;
                 }
 
-                // Try to damage EnemyB (Dron)
-                EnemyB enemyB = hit.transform.GetComponent<EnemyB>();
+                EnemyB enemyB = hit.transform.GetComponentInParent<EnemyB>();
                 if (enemyB != null)
                 {
+                    Debug.Log("✓ Damaging EnemyB with " + damage + " damage");
                     enemyB.TakeDamage(damage);
                     return;
                 }
 
                 Debug.Log("Hit object has no damage component");
             }
+            else
+            {
+                Debug.Log("Raycast didn't hit anything");
+            }
         }
         else
         {
-            //Sfx
             Debug.Log("Out of ammo! Press R to reload.");
         }
     }
